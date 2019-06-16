@@ -39,6 +39,10 @@ elseif boardversion == "v3.6-56V" then
     boarddir = 'Board/v3'
     FLAGS += "-DHW_VERSION_MAJOR=3 -DHW_VERSION_MINOR=6"
     FLAGS += "-DHW_VERSION_VOLTAGE=56"
+elseif boardversion == "hoverboard-gd32f403rct6" then
+    boarddir = 'Board/hoverboard-gd32f403rct6'
+    FLAGS += "-DHW_VERSION_MAJOR=3 -DHW_VERSION_MINOR=6"
+    FLAGS += "-DHW_VERSION_VOLTAGE=56"
 elseif boardversion == "" then
     error("board version not specified - take a look at tup.config.default")
 else
