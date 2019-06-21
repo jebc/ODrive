@@ -139,6 +139,22 @@ void ASCII_protocol_process_line(const uint8_t* buffer, size_t len, StreamSink& 
             axis->watchdog_feed();
         }
 
+     } else if (cmd[0] == 's') { // speed & steer -- dual control
+        float speed_setpoint, steer_setpoint, current_feed_forward;
+        int numscan = sscanf(cmd, "sp %f st %f %f", &speed_setpoint, &steer_setpoint, &current_feed_forward);
+        if (numscan < 2) {
+            respond(response_channel, use_checksum, "invalid command format");
+        } else {
+            if (numscan < 3)
+                current_feed_forward = 0.0f;
+            Axis* axis0 = axes[0];
+            Axis* axis1 = axes[1];
+            axis0->controller_.set_vel_setpoint(speed_setpoint - steer_setpoint, current_feed_forward);
+            axis1->controller_.set_vel_setpoint(speed_setpoint + steer_setpoint, current_feed_forward);
+            axis0->watchdog_feed();
+            axis1->watchdog_feed();
+        }
+
     } else if (cmd[0] == 'c') { // current control
         unsigned motor_number;
         float current_setpoint;
